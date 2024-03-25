@@ -472,9 +472,10 @@ class FairseqTask(object):
         """
         model.train()
         model.set_num_updates(update_num)
+        # should question as issue
         with torch.autograd.profiler.record_function("forward"):
             loss, sample_size, logging_output = criterion(
-                model, sample, update_num=update_num
+                model, sample,
             )
         if ignore_grad:
             loss *= 0

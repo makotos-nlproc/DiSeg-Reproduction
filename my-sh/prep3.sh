@@ -1,18 +1,6 @@
 export PYTHONPATH="/home/s2210411/DiSeg/exapmles:$PYTHONPATH"
-
 MUSTC_ROOT=/home/s2210411/Data/MuST-C-v1.0
 LANG=de
-# tar -xzvf ${MUSTC_ROOT}/MUSTC_v1.0_en-${LANG}.tar.gz
-
-# 1. prepare raw mustc data
-python3 examples/speech_to_text/prep_mustc_data_raw.py \
-    --data-root ${MUSTC_ROOT} --tgt-lang ${LANG}
-
-# 2. prepare vocabulary
-python3 examples/speech_to_text/prep_vocab.py \
-    --data-root ${MUSTC_ROOT} \
-    --vocab-type unigram --vocab-size 10000 --joint \
-    --tgt-lang ${LANG}
 
 # 3. prepare mustc mt data
 MUSTC_TEXT_ROOT=${MUSTC_ROOT}/en-${LANG}-text
@@ -38,18 +26,3 @@ fairseq-preprocess --source-lang en --target-lang ${LANG} \
     --srcdict ${MUSTC_ROOT}/en-${LANG}/spm_unigram10000_raw.txt \
     --nwordssrc 10000 --nwordstgt 10000 \
     --workers 60
-
-# 4. generate the wav list and reference file for SimulEval
-# cd ${MUSTC_ROOT}
-# mkdir ${MUSTC_ROOT}/en-de-simuleval
-# cd en-de-simuleval
-# mkdir dev
-# mkdir tst-COMMON
-EVAL_ROOT=${MUSTC_ROOT}/en-de-simuleval # such as ${MUSTC_ROOT}/en-de-simuleval
-for SPLIT in dev tst-COMMON
-do
-    python examples/speech_to_text/seg_mustc_data.py \
-    --data-root ${MUSTC_ROOT} --lang ${LANG} \
-    --split ${SPLIT} --task st \
-    --output ${EVAL_ROOT}/${SPLIT}
-done

@@ -14,13 +14,15 @@ from fairseq.models.speech_to_text import (
     ConvTransformerModel,
     convtransformer_espnet,
     convtransformer_espnet_wav2vec,
-    convtransformer_espnet_wav2vec_encwav,
+    # convtransformer_espnet_wav2vec_encwav,
+    # ImportError: cannot import name 'convtransformer_espnet_wav2vec_encwav' from 'fairseq.models.speech_to_text' (/home/s2210411/DiSeg/fairseq/models/speech_to_text/__init__.py)
+    ConvTransformerModelWac2VecSeg,
     ConvTransformerEncoder,
     ConvTransformerModelWac2Vec,
-    ConvTransformerCIFModel,
-    ConvTransformerModelWac2VecCIF,
-    convtransformer_espnet_cif,
-    convtransformer_espnet_wav2vec_cif,
+    # ConvTransformerCIFModel,
+    # ConvTransformerModelWac2VecCIF,
+    # convtransformer_espnet_cif,
+    # convtransformer_espnet_wav2vec_cif,
 )
 from fairseq.models.speech_to_text.modules.augmented_memory_attention import (
     augmented_memory,
@@ -113,84 +115,84 @@ class SimulConvTransformerModelWav2Vec(ConvTransformerModelWac2Vec):
         return decoder
 
 
-@register_model("convtransformer_simul_trans_cif")
-class SimulConvTransformerCIFModel(ConvTransformerCIFModel):
-    """
-    Implementation of the paper:
+# @register_model("convtransformer_simul_trans_cif")
+# class SimulConvTransformerCIFModel(ConvTransformerCIFModel):
+#     """
+#     Implementation of the paper:
 
-    SimulMT to SimulST: Adapting Simultaneous Text Translation to
-    End-to-End Simultaneous Speech Translation
+#     SimulMT to SimulST: Adapting Simultaneous Text Translation to
+#     End-to-End Simultaneous Speech Translation
 
-    https://www.aclweb.org/anthology/2020.aacl-main.58.pdf
-    """
+#     https://www.aclweb.org/anthology/2020.aacl-main.58.pdf
+#     """
 
-    @staticmethod
-    def add_args(parser):
-        super(SimulConvTransformerCIFModel, SimulConvTransformerCIFModel).add_args(
-            parser
-        )
-        parser.add_argument(
-            "--train-monotonic-only",
-            action="store_true",
-            default=False,
-            help="Only train monotonic attention",
-        )
+#     @staticmethod
+#     def add_args(parser):
+#         super(SimulConvTransformerCIFModel, SimulConvTransformerCIFModel).add_args(
+#             parser
+#         )
+#         parser.add_argument(
+#             "--train-monotonic-only",
+#             action="store_true",
+#             default=False,
+#             help="Only train monotonic attention",
+#         )
 
-    @classmethod
-    def build_decoder(cls, args, task, embed_tokens):
-        tgt_dict = task.tgt_dict
+#     @classmethod
+#     def build_decoder(cls, args, task, embed_tokens):
+#         tgt_dict = task.tgt_dict
 
-        from examples.simultaneous_translation.models.transformer_monotonic_attention_cif import (
-            TransformerMonotonicDecoder,
-        )
+#         from examples.simultaneous_translation.models.transformer_monotonic_attention_cif import (
+#             TransformerMonotonicDecoder,
+#         )
 
-        decoder = TransformerMonotonicDecoder(args, tgt_dict, embed_tokens)
+#         decoder = TransformerMonotonicDecoder(args, tgt_dict, embed_tokens)
 
-        if getattr(args, "load_pretrained_decoder_from", None):
-            decoder = checkpoint_utils.load_pretrained_component_from_model(
-                component=decoder, checkpoint=args.load_pretrained_decoder_from
-            )
-        return decoder
+#         if getattr(args, "load_pretrained_decoder_from", None):
+#             decoder = checkpoint_utils.load_pretrained_component_from_model(
+#                 component=decoder, checkpoint=args.load_pretrained_decoder_from
+#             )
+#         return decoder
 
 
-@register_model("convtransformer_simul_trans_wav2vec_cif")
-class SimulConvTransformerModelWav2VecCIF(ConvTransformerModelWac2VecCIF):
-    """
-    Implementation of the paper:
+# @register_model("convtransformer_simul_trans_wav2vec_cif")
+# class SimulConvTransformerModelWav2VecCIF(ConvTransformerModelWac2VecCIF):
+#     """
+#     Implementation of the paper:
 
-    SimulMT to SimulST: Adapting Simultaneous Text Translation to
-    End-to-End Simultaneous Speech Translation
+#     SimulMT to SimulST: Adapting Simultaneous Text Translation to
+#     End-to-End Simultaneous Speech Translation
 
-    https://www.aclweb.org/anthology/2020.aacl-main.58.pdf
-    """
+#     https://www.aclweb.org/anthology/2020.aacl-main.58.pdf
+#     """
 
-    @staticmethod
-    def add_args(parser):
-        super(
-            SimulConvTransformerModelWav2VecCIF, SimulConvTransformerModelWav2VecCIF
-        ).add_args(parser)
-        parser.add_argument(
-            "--train-monotonic-only",
-            action="store_true",
-            default=False,
-            help="Only train monotonic attention",
-        )
+#     @staticmethod
+#     def add_args(parser):
+#         super(
+#             SimulConvTransformerModelWav2VecCIF, SimulConvTransformerModelWav2VecCIF
+#         ).add_args(parser)
+#         parser.add_argument(
+#             "--train-monotonic-only",
+#             action="store_true",
+#             default=False,
+#             help="Only train monotonic attention",
+#         )
 
-    @classmethod
-    def build_decoder(cls, args, task, embed_tokens):
-        tgt_dict = task.tgt_dict
+#     @classmethod
+#     def build_decoder(cls, args, task, embed_tokens):
+#         tgt_dict = task.tgt_dict
 
-        from examples.simultaneous_translation.models.transformer_monotonic_attention import (
-            TransformerMonotonicDecoder,
-        )
+#         from examples.simultaneous_translation.models.transformer_monotonic_attention import (
+#             TransformerMonotonicDecoder,
+#         )
 
-        decoder = TransformerMonotonicDecoder(args, tgt_dict, embed_tokens)
+#         decoder = TransformerMonotonicDecoder(args, tgt_dict, embed_tokens)
 
-        if getattr(args, "load_pretrained_decoder_from", None):
-            decoder = checkpoint_utils.load_pretrained_component_from_model(
-                component=decoder, checkpoint=args.load_pretrained_decoder_from
-            )
-        return decoder
+#         if getattr(args, "load_pretrained_decoder_from", None):
+#             decoder = checkpoint_utils.load_pretrained_component_from_model(
+#                 component=decoder, checkpoint=args.load_pretrained_decoder_from
+#             )
+#         return decoder
 
 
 @register_model_architecture(
@@ -207,26 +209,26 @@ def convtransformer_simul_trans_espnet_wav2vec(args):
     convtransformer_espnet_wav2vec(args)
 
 
-@register_model_architecture(
-    "convtransformer_simul_trans", "convtransformer_simul_trans_espnet_wav2vec_encwav"
-)
-def convtransformer_simul_trans_espnet_wav2vec_encwav(args):
-    convtransformer_espnet_wav2vec_encwav(args)
+# @register_model_architecture(
+#     "convtransformer_simul_trans", "convtransformer_simul_trans_espnet_wav2vec_encwav"
+# )
+# def convtransformer_simul_trans_espnet_wav2vec_encwav(args):
+#     convtransformer_espnet_wav2vec_encwav(args)
 
 
-@register_model_architecture(
-    "convtransformer_simul_trans_cif", "convtransformer_simul_trans_espnet_cif"
-)
-def convtransformer_simul_trans_espnet_cif(args):
-    convtransformer_espnet_cif(args)
+# @register_model_architecture(
+#     "convtransformer_simul_trans_cif", "convtransformer_simul_trans_espnet_cif"
+# )
+# def convtransformer_simul_trans_espnet_cif(args):
+#     convtransformer_espnet_cif(args)
 
 
-@register_model_architecture(
-    "convtransformer_simul_trans_wav2vec_cif",
-    "convtransformer_simul_trans_espnet_wav2vec_cif",
-)
-def convtransformer_simul_trans_espnet_wav2vec_cif(args):
-    convtransformer_espnet_wav2vec_cif(args)
+# @register_model_architecture(
+#     "convtransformer_simul_trans_wav2vec_cif",
+#     "convtransformer_simul_trans_espnet_wav2vec_cif",
+# )
+# def convtransformer_simul_trans_espnet_wav2vec_cif(args):
+#     convtransformer_espnet_wav2vec_cif(args)
 
 
 @register_model("convtransformer_augmented_memory")

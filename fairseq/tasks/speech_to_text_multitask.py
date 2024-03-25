@@ -643,9 +643,12 @@ class SpeechToTextMultitask(LegacyFairseqTask):
         if self.args.eval_bleu:
 
             def sum_logs(key):
-                if key in logging_outputs[0]:
-                    return sum(log[key].cpu().numpy() for log in logging_outputs)
-                return sum(log.get(key, 0) for log in logging_outputs)
+                # should question as issue
+                import torch
+                result = sum(log.get(key, 0) for log in logging_outputs)
+                if torch.is_tensor(result):
+                    result = result.cpu()
+                return result
 
             counts, totals = [], []
             for i in range(EVAL_BLEU_ORDER):

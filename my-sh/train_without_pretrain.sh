@@ -1,17 +1,30 @@
+#!/bin/bash
+#PBS -j oe
+#PBS -q GPU-S
+# https://www.jaist.ac.jp/iscenter/mpc/kagayaki/2/#c5869
+#PBS -l select=1:ngpus=1
+#PBS -M skmkt3a2o1i@gmail.com -m be
+#PBS -N diseg-train-without-pretrain
+
+module load cuda/12.1
+source /home/s2210411/conda/etc/profile.d/conda.sh
+conda activate diseg-py38
+cd ${PBS_O_WORKDI}
+# export PYTHONPATH="/home/s2210411/{}:$PYTHONPATH"
+
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 
 MUSTC_ROOT=/home/s2210411/Data/MuST-C-v1.0
 LANG=de
 
-SAVE_DIR=/home/s2210411/DiSeg/ckpt
+SAVE_DIR==/home/s2210411/ckpt-1
 W2V_MODEL=/home/s2210411/DiSeg/w2v/wav2vec_small.pt
-# W2V_MODEL=/home/s2210411/DiSeg/w2v/wav2vec_small_960h.pt
 
 mean=0
 var=3
 
-# (optional) pre-train a mt encoder/decoder and load the pre-trained model with --load-pretrained-mt-encoder-decoder-from ${PATH_TO_PRETRAINED_MODEL}
-python train.py ${MUSTC_ROOT}/en-${LANG}  --tgt-lang ${LANG} --ddp-backend=legacy_ddp \
+# (optional) pre-train a mt encoder/decoder and load the pre-trained model with --load-pretrained-mt-encoder-decoder-from ${PRETRAIN_DIR}/mt_pretrain_model.pt
+python /home/s2210411/DiSeg/train.py ${MUSTC_ROOT}/en-${LANG}  --tgt-lang ${LANG} --ddp-backend=legacy_ddp \
   --config-yaml config_raw.yaml \
   --train-subset train_raw \
   --valid-subset dev_raw \
